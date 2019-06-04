@@ -1,10 +1,7 @@
 import { baseUrl } from "./env.js";
 
-
-
 export default async(url = '', data = {}, type = 'GET', method = "fetch") => {
 
-    console.log(type);
     type = type.toUpperCase();
     url = baseUrl + url;
 
@@ -15,7 +12,6 @@ export default async(url = '', data = {}, type = 'GET', method = "fetch") => {
         });
 
         if (dataStr !== "") {
-            // dataStr = dataStr.subStr(0, lastIndexOf("&"));
             dataStr = dataStr.substr(0, dataStr.lastIndexOf("&"));
             url = url + '?' + dataStr;
         }
@@ -39,17 +35,49 @@ export default async(url = '', data = {}, type = 'GET', method = "fetch") => {
                 value: JSON.stringify(data)
             })
         }
-
         try {
             const response = await fetch(url, requestConfig);
-            console.log(response);
+
             const responseJson = await response.json();
+
             return responseJson;
         } catch (error) {
 
+            throw new Error(error);
         }
     } else { //不支持 使用ajax
+        return new Promise((resolve, reject) => {
+            let requestObj;
+            if (window.XMLHttpRequest) {
+                requestObj = new XMLHttpRequest();
+            } else {
+                requestObj = new ActiveXObject;
+            }
 
+
+            let sendData = "";
+            if (type == "POST") {
+                sendData = JSON.stringify(data);
+            };
+
+            requestObj.open(type, url, true);
+            requestObj.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            requestObj.send(sendData);
+
+            requestObj.onreadystatechange = () => {
+                if (requestObj.readyState == 4) {
+                    if (requestObj.status == 200) {
+                        let obj = requestObj.response;
+                        if (typeof obj !== 'object') {
+                            obj = JSON.parse(obj);
+                        }
+                        resolve(obj);
+                    } else {
+                        reject(requestObj)
+                    }
+
+                }
+            }
+        })
     }
-
 }
