@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- <div>开始开发</div> -->
+     <!--<div>开始开发</div> -->
     <!-- <img src="./assets/logo.png"> -->
     <router-view/>
   </div>
@@ -14,5 +14,5 @@ export default {
 
 <style lang="scss">
    @import './style/common';
- 
+
 </style>
