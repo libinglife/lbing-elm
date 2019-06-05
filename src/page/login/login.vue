@@ -5,7 +5,7 @@
         </head-top>
 
        <!--验证码 -->
-        <form class="loginForm" v-if="loginWay"> 
+        <form class="loginForm" v-if="loginWay">
             <section class="input_container phone_number">
                 <input type="text" placeholder="账号密码随便输入" name="phone" maxlength="11" v-model="phoneNumber">
                 <button @click.prevent="getVerifyCode" :class="{right_phone_number:rightPhoneNumber}" v-show="!computedTime">获取验证码</button>
@@ -55,7 +55,7 @@
 <script>
   import headTop from '../../components/header/head';
   import { getcaptchas } from "../../service/getData";
-import { log } from 'util';
+
 
 
 export default {
@@ -78,9 +78,8 @@ export default {
   },
   created(){
      var ss = this.getCaptchaCode();
-     console.log(ss);
   },
- 
+
   methods:{
     //   密码展现方式
       changePassWordType(){
@@ -89,12 +88,10 @@ export default {
     //   获取验证码
      async getCaptchaCode(){
         // getcaptchas().then((res)=>{
-        //    console.log(res);
         //    this.captchaCodeImg = res.code;
         // })
 
         let res =  await getcaptchas();
-      
         this.captchaCodeImg = res.code;
       },
     // 登录
@@ -157,7 +154,7 @@ export default {
                 }
                 .change_img{
                     display: flex;
-                    flex-direction: 'column';
+                    flex-direction: column;
                     flex-wrap: wrap;
                     width: 2rem;
                     justify-content: center;
