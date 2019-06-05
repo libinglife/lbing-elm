@@ -1,21 +1,34 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/page/home/home';
-import City from '@/page/city/city';
-// import City from '@/page/city/city'
 
-Vue.use(Router)
+// import Home from '@/page/home/home';
+// import City from '@/page/city/city';
+
+
+Vue.use(Router);
+
+const home = resolve => require.ensure([], () => resolve(require('@/page/home/home')), 'home');
+const city = resolve => require.ensure([], () => resolve(require('@/page/city/city')), 'city');
+const login = resolve => require.ensure([], () => resolve(require('@/page/login/login')), 'login');
 
 export default new Router({
     routes: [{
         path: '',
         redirect: '/home'
     }, {
+        path: '/',
+        redirect: '/home'
+    }, {
         path: '/home',
         name: 'home',
-        component: Home
+        component: home
     }, {
         path: '/city/:cityid',
-        component: City
+        name: 'city',
+        component: city
+    }, {
+        path: '/login',
+        name: login,
+        component: login
     }]
 })
