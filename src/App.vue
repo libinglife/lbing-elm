@@ -3,12 +3,17 @@
      <!--<div>开始开发</div> -->
     <!-- <img src="./assets/logo.png"> -->
     <router-view/>
+    <svg-icon></svg-icon>	
   </div>
 </template>
 
 <script>
+import svgIcon from './components/common/svg';
 export default {
-  name: 'App'
+  name: 'App',
+  components:{
+            svgIcon
+        },
 }
 </script>
 

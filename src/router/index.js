@@ -10,6 +10,7 @@ Vue.use(Router);
 const home = resolve => require.ensure([], () => resolve(require('@/page/home/home')), 'home');
 const city = resolve => require.ensure([], () => resolve(require('@/page/city/city')), 'city');
 const login = resolve => require.ensure([], () => resolve(require('@/page/login/login')), 'login');
+const profile = resolve => require.ensure([], () => resolve(require('@/page/profile/profile')), 'profile');
 
 export default new Router({
     routes: [{
@@ -30,5 +31,9 @@ export default new Router({
         path: '/login',
         name: login,
         component: login
+    }, {
+        path: '/profile',
+        name: profile,
+        component: profile
     }]
 })

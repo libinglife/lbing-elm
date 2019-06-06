@@ -7,8 +7,8 @@
             <polyline points="12,18 4,9 12,0" style="fill:none;stroke:rgb(255,255,255);stroke-width:2"/>
         </svg>
     </section>
-    <router-link class="head_login"  v-if='signinUp' to="/login">
-        <svg class="user_avatar" v-if="false">
+    <router-link class="head_login"  v-if='signinUp' :to="userInfo?'/profile':'/login'">
+        <svg class="user_avatar" v-if="userInfo">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use>
         </svg>
         <span class="login_span" v-else>登录|注册</span>
@@ -23,15 +23,25 @@
 </template>
 
 <script>
-export default {
-  name: 'Head',
-  data () {
-    return {
+    import { mapState ,mapActions } from "vuex";
+    export default {
+        name: 'Head',
+        data () {
+            return {
 
+            }
+        },
+        mounted(){
+           this.getUserInfo();
+        },
+        props:['signinUp','goBack','headTitle'],
+        computed:{
+            ...mapState(['userInfo'])
+        },
+        methods:{
+            ...mapActions(['getUserInfo'])
+        }
     }
-  },
-  props:['signinUp','goBack','headTitle']
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -63,6 +73,7 @@ export default {
         .user_avatar{
             fill: #fff;
             @include wh(.8rem,0.8rem);
+          
         }
     }
     .title_head{

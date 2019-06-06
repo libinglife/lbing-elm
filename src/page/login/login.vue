@@ -48,20 +48,25 @@
             注册过的用户可凭账号密码登录
         </p>
         <div class="login_container" @click="mobileLogin">登录</div>
+        <alertTip v-if="showAlert" :alertText="alertText" @closeTip="closeX" ></alertTip>
 
    </div>
 </template>
 
 <script>
   import headTop from '../../components/header/head';
-  import { getcaptchas } from "../../service/getData";
+  import alertTip from '../../components/common/alertTip';
+  import {mapState , mapMutations} from 'vuex';
+  import { getcaptchas , accountLogin} from "../../service/getData";
+
 
 
 
 export default {
   name: "login",
   components:{
-      headTop
+      headTop,
+      alertTip
   },
   data(){
       return {
@@ -72,15 +77,18 @@ export default {
           userInfo:null ,// 用户信息
           captchaCodeImg:null ,//验证码地址
           codeNumber : null ,//验证码
-
-
+          showAlert:false , //显示提示组件
+          alertText : null ,//提示内容
       }
   },
-  created(){
-     var ss = this.getCaptchaCode();
-  },
 
+  created(){
+      this.getCaptchaCode();//获取验证码
+  },
   methods:{
+      ...mapMutations([
+          'RECORD_USERINFO',
+      ]),
     //   密码展现方式
       changePassWordType(){
            this.showPassword = !this.showPassword;
@@ -95,8 +103,50 @@ export default {
         this.captchaCodeImg = res.code;
       },
     // 登录
-      mobileLogin(){
+     async mobileLogin(){
+       
+        console.log("登录");
+        //验证码方式 
+        if(this.loginWay){
 
+        }else{//密码方式
+
+           if(!this.userAccount){
+               this.showAlert = true ;
+               this.alertText = "请输入用户名/邮箱/手机号" ;
+               return;
+           }else if(!this.passWord){
+               this.showAlert = true ;
+               this.alertText = "请输入密码";
+               return;
+           }else if(!this.codeNumber){
+               this.showAlert = true;
+               this.alertText = '请输入验证码';
+               return
+           }
+
+            this.userInfo = await accountLogin(this.userAccount,this.passWord,this.codeNumber);
+
+        }
+        
+        if(!this.userInfo.user_id){
+             this.showAlert = true;
+             this.alertText = this.userInfo.message;
+             if(!this.loginWay){
+                 this.getCaptchaCode();
+             }
+        }else{
+            console.log("成功");
+            this.RECORD_USERINFO(this.userInfo);
+            this.$router.go(-1);
+            
+        }
+        
+      },
+
+      //关闭弹框 
+      closeX(){
+        this.showAlert = false;
       }
   }
 };
