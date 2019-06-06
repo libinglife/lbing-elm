@@ -6,7 +6,5 @@ export default {
         let res = await getUser();
         console.log(res);
         commit(GET_USERINFO, res);
-
     }
-
 }
