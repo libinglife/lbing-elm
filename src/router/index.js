@@ -11,6 +11,7 @@ const home = resolve => require.ensure([], () => resolve(require('@/page/home/ho
 const city = resolve => require.ensure([], () => resolve(require('@/page/city/city')), 'city');
 const login = resolve => require.ensure([], () => resolve(require('@/page/login/login')), 'login');
 const profile = resolve => require.ensure([], () => resolve(require('@/page/profile/profile')), 'profile');
+const info = resolve => require.ensure([], () => resolve(require('@/page/profile/children/info')), 'info');
 
 export default new Router({
     routes: [{
@@ -34,6 +35,10 @@ export default new Router({
     }, {
         path: '/profile',
         name: profile,
-        component: profile
+        component: profile,
+        children: [{
+            path: 'info',
+            component: info,
+        }]
     }]
 })

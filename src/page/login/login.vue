@@ -104,9 +104,9 @@ export default {
       },
     // 登录
      async mobileLogin(){
-       
+
         console.log("登录");
-        //验证码方式 
+        //验证码方式
         if(this.loginWay){
 
         }else{//密码方式
@@ -128,7 +128,7 @@ export default {
             this.userInfo = await accountLogin(this.userAccount,this.passWord,this.codeNumber);
 
         }
-        
+
         if(!this.userInfo.user_id){
              this.showAlert = true;
              this.alertText = this.userInfo.message;
@@ -139,12 +139,12 @@ export default {
             console.log("成功");
             this.RECORD_USERINFO(this.userInfo);
             this.$router.go(-1);
-            
+
         }
-        
+
       },
 
-      //关闭弹框 
+      //关闭弹框
       closeX(){
         this.showAlert = false;
       }
