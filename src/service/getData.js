@@ -20,6 +20,13 @@ export const groupcity = () => fetch('/api/v1/cities', {
 //根据id 搜素城市名
 export const currentcity = (id_num) => fetch('/api/v1/cities/' + id_num);
 
+//城市页 获取搜索地址
+export const searchplace = (cityid, value) => fetch('/api/v1/pois', {
+    type: 'search',
+    city_id: cityid,
+    keyword: value
+})
+
 
 // 登录页获取图片验证码
 export const getcaptchas = () => fetch('/api/v1/captchas', {}, "post");

@@ -9,6 +9,7 @@ Vue.use(Router);
 
 const home = resolve => require.ensure([], () => resolve(require('@/page/home/home')), 'home');
 const city = resolve => require.ensure([], () => resolve(require('@/page/city/city')), 'city');
+const msite = resolve => require.ensure([], () => resolve(require('@/page/msite/msite')), 'msite')
 const login = resolve => require.ensure([], () => resolve(require('@/page/login/login')), 'login');
 const profile = resolve => require.ensure([], () => resolve(require('@/page/profile/profile')), 'profile');
 const info = resolve => require.ensure([], () => resolve(require('@/page/profile/children/info')), 'info');
@@ -28,6 +29,10 @@ export default new Router({
         path: '/city/:cityid',
         name: 'city',
         component: city
+    }, {
+        path: '/msite',
+        component: msite,
+        meta: { keepAlive: true }
     }, {
         path: '/login',
         name: login,
