@@ -31,8 +31,9 @@ export default new Router({
         component: city
     }, {
         path: '/msite',
-        component: msite,
-        meta: { keepAlive: true }
+        name: 'msite',
+        component: msite
+            // meta: { keepAlive: true }
     }, {
         path: '/login',
         name: login,
