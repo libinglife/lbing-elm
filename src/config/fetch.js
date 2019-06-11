@@ -30,14 +30,29 @@ export default async(url = '', data = {}, type = 'GET', method = "fetch") => {
             cache: "force-cache"
         }
 
-        if (type == 'POST') {
+        let avatarConfig = {
+            credentials: 'include',
+            method: type,
+        }
+
+        if (type == 'POST' && !(url.indexOf("avatar") > -1)) {
             Object.defineProperty(requestConfig, 'body', {
                 value: JSON.stringify(data)
+            })
+        } else if (url.indexOf("avatar") > -1) { //上传头像
+            Object.defineProperty(avatarConfig, 'body', {
+                value: data.files
             })
         }
 
         try {
-            const response = await fetch(url, requestConfig);
+            let response;
+            if (url.indexOf("avatar") > -1) {
+                response = await fetch(url, avatarConfig);
+            } else {
+                response = await fetch(url, requestConfig);
+            }
+
 
             const responseJson = await response.json();
 

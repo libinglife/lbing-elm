@@ -28,4 +28,10 @@ export const getcaptchas = () => fetch('/api/v1/captchas', {}, "post");
 export const accountLogin = (username, password, captcha_code) => fetch('/api/v2/login', { username, password, captcha_code }, 'post');
 
 // 获取用户信息
-export const getUser = () => fetch('./api/v1/user', { user_id: getStorage("user_id") })
+export const getUser = () => fetch('/api/v1/user', { user_id: getStorage("user_id") });
+
+// 个人中心更换头像
+export const changeAvatar = (userid, files) => fetch('/api/eus/v1/users/' + userid + '/avatar', { files }, 'post');
+
+//退出登录
+export const signout = () => fetch('/api/v2/signout');

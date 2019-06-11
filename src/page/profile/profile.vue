@@ -134,8 +134,9 @@
         </section>
 
         <!-- <transition name="router-slid" node ="out-in"> -->
+        <transition name="router-slid" >
            <router-view></router-view>        
-        <!-- </transition> -->
+        </transition>
         
     </div>
 </template>
@@ -170,6 +171,7 @@ export default {
   },
   methods: {
     initData() {
+       
       if (this.userInfo && this.userInfo.user_id) {
         this.avatar = this.userInfo.avatar;
         this.username = this.userInfo.username;
@@ -182,7 +184,12 @@ export default {
         this.mobile = "暂无绑定手机号";
       }
     }
-  }
+  },
+   watch: {
+        userInfo: function (value){
+            this.initData()
+        }
+    }
 };
 </script>
 
@@ -342,7 +349,8 @@ export default {
   transition: all 0.4s;
 }
 .router-slid-enter,
-.router-slid-leave-active {
+// .router-slid-leave-active {
+.router-slid-leave-to {
   transform: translate3d(2rem, 0, 0);
   opacity: 0;
 }

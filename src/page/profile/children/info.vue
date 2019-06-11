@@ -1,24 +1,212 @@
 <template>
   <div class="rating_page">
-        <head-top head-title="账户信息" go-back='true'></head-top>
+     <head-top head-title="账户信息" go-back='true'></head-top>
+     <section class="profile-info">
+         <section class="headportrait">
+            <input type="file" class="profileinfopanel-upload" @change="uploadAvatar">
+            <h2>头像</h2>
+            <div class="headportrait-div">
+                <img v-if='userInfo' :src="imgBaseUrl+userInfo.avatar" class="headportrait-div-top" >
+                <span class="headportrait-div-top" v-else>
+                    <svg>
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#avatar-default"></use>
+                    </svg>
+                </span>
+                <span class="headportrait-div-bottom">
+                    <svg fill="#d8d8d8">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
+                    </svg>
+                </span>
+            </div>
+         </section>
+         <router-link to="/profile/info/setusername" class="info-router">
+             <section class="headportrait headportraitwo">  
+                 <h2>用户名</h2>
+                 <div class="headportrait-div">
+                        <p>{{username}}</p>
+                        <span class="headportrait-div-bottom">
+                            <svg fill="#d8d8d8">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
+                            </svg>
+                        </span>
+                    </div>
+             </section>
 
+         </router-link>
+          <router-link to="/profile/info/address" class="info-router">
+                <section class="headportrait headportraitwo headportraithree">
+                        <h2>收货地址</h2>
+                        <div class="headportrait-div">
+                            <span class="headportrait-div-bottom">
+                                <svg fill="#d8d8d8">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
+                                </svg>
+                            </span>
+                        </div>
+                </section>
+            </router-link>
+            <section class="bind-phone">
+                账号绑定
+            </section>
+
+             <section class="info-router" @click="changePhone">
+                <section class="headportrait headportraitwo headportraithree">
+                        <h2><img src="../../../images/bindphone.png" style="display:inline-block;margin-right:.4rem;" alt="">手机</h2>
+                        <div class="headportrait-div">
+                            <p>{{infotel}}</p>
+                            <span class="headportrait-div-bottom">
+                                <svg fill="#d8d8d8">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
+                                </svg>
+                            </span>
+                        </div>
+                </section>
+            </section>
+            <section class="bind-phone">
+                安全设置
+            </section>
+            <router-link to="/forget" class="info-router">
+                <section class="headportrait headportraitwo headportraithree">
+                        <h2>登录密码</h2>
+                        <div class="headportrait-div">
+                            <p>修改</p>
+                            <span class="headportrait-div-bottom">
+                                <svg fill="#d8d8d8">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
+                                </svg>
+                            </span>
+                        </div>
+                </section>
+            </router-link>
+             <section class="exitlogin" @click="exitlogin">退出登录</section>
+     </section>
+
+      <section class="coverpart" v-if="show">
+        <section class="cover-background"></section>
+        <section class="cover-content " :class="{'cover-animate' : isEnter, 'cover-animate-leave' : isLeave}">
+            <div class="sa-icon">
+                <span class="sa-body"></span>
+                <span class="sa-dot"></span>
+            </div>
+            <h2>是否退出登录</h2>
+            <div class="sa-botton">
+                <button class="waiting" @click="waitingThing">再等等</button>
+                <div style="display:inline-block;">
+                    <button class="quitlogin"  @click="outLogin">退出登录</button>
+                </div>
+            </div>
+        </section>
+      </section>
+
+
+
+     <alertTip v-if="showAlert" @closeTip = "showAlert = false" :alertText='alertText'></alertTip>
   </div>
 </template>
 
 <script>
-import headTop from "../../../components/header/head";
+import headTop from "@/components/header/head";
+import alertTip from "@/components/common/alertTip";
+import { imgBaseUrl } from "@/config/env";
+import { mapState ,mapMutations } from "vuex";
+import { changeAvatar ,signout } from "@/service/getData";
+import { removeStore } from "@/config/utils";
+import { removeStorage } from '../../../config/utils';
+// import { setTimeout, clearTimeout } from 'timers';
+
+
 export default {
   name: "info",
   components: {
-    headTop
+    headTop,
+    alertTip
   },
   props: {},
   data() {
-    return {};
+    return {
+        imgBaseUrl:imgBaseUrl,
+        showAlert:false, //提示框
+        alertText : null ,
+        username:'',
+        avatar:'',      //用户头像
+        infotel:'',     //用户手机
+        show:false , //退出登录提示框
+        isEnter :true , //是否登录
+        isLeave:false ,//是否退出
+    };
   },
-  watch: {},
-  computed: {},
-  methods: {},
+  watch: {
+      userInfo(newVal ,oldVal){
+
+          if(newVal&&newVal.user_id){
+              this.username = newVal.username;
+          }
+          
+      }
+  },
+  computed: {
+      ...mapState(['userInfo'])
+  },
+  methods: {
+      ...mapMutations(["OUT_LOGIN"]),
+    //   上传头像
+     async  uploadAvatar(){
+         var _this = this;
+          console.log("上传图片");
+          if(this.userInfo){
+              let input = document.querySelector('.profileinfopanel-upload');
+              let datas = new FormData();
+              datas.append('file',input.files[0]);
+              let userid = this.userInfo.user_id;
+            
+              try {
+                 
+                  let response = await changeAvatar(userid,datas);
+                  if(response.status ==1){
+                       this.userInfo.avatar = response.image_path;
+                  }
+                
+              } catch (error) {
+                   this.showAlert = true;
+                   this.alertText = '上传失败';
+                   throw new Error(error);
+              }
+
+          } 
+      },
+    //   改变手机号
+      changePhone () {
+          this.showAlert = true;
+          this.alertText = '请在手机APP中设置';
+      },
+      //退出登录
+      exitlogin(){
+        this.show = true;
+        this.isEnter = true;
+        this.isLeave = false;
+      },
+      waitingThing(){
+        clearTimeout(this.timer)
+        this.isEnter = false;
+        this.isLeave = true;
+        this.timer = setTimeout(()=>{
+            clearTimeout(this.timer);
+            this.show = false;
+        },200)
+      },
+      async outLogin(){
+         console.log("退出登录");
+         this.OUT_LOGIN();
+         this.waitingThing();
+         this.$router.go(-1);
+         removeStorage('user_id');
+         var res =await signout();
+
+        console.log(res);
+        
+         
+      }
+  },
   created() {},
   mounted() {}
 };
@@ -51,6 +239,7 @@ export default {
     top: 2.35rem;
     left: 0;
     @include wh(100%, 3.1rem);
+    border: 1px solid red;
   }
   .headportrait {
     margin-top: 0.4rem;

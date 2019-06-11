@@ -1,4 +1,4 @@
-import { RECORD_USERINFO, GET_USERINFO } from './mutation-types';
+import { RECORD_USERINFO, GET_USERINFO, OUT_LOGIN } from './mutation-types';
 
 import { setStorage, getStorage } from "../config/utils";
 export default {
@@ -27,5 +27,10 @@ export default {
         } else {
             state.userInfo = null;
         }
+    },
+    [OUT_LOGIN](state) {
+        state.userInfo = {},
+            state.login = false;
+
     }
 }
