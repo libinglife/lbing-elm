@@ -42,3 +42,11 @@ export const changeAvatar = (userid, files) => fetch('/api/eus/v1/users/' + user
 
 //退出登录
 export const signout = () => fetch('/api/v2/signout');
+
+// 商品页 msite 食品分类列表
+
+export const msiteFoodTypes = (geohash) => fetch("/api/v2/index_entry", {
+    geohash,
+    group_type: '1',
+    "flags[]": "F"
+})

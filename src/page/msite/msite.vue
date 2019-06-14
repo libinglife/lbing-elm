@@ -33,7 +33,13 @@
 
 <script>
  import headTop from "../../components/header/head";
- import { imgBaseUrl } from "@/config/env";
+
+ import {msiteFoodTypes} from '@/service/getData.js';
+//  import '../../style/swiper.min.js'
+//  import '../../style/swiper.min.css';
+
+
+
  export default {
     name:'msite',
     data () {
@@ -41,11 +47,49 @@
         geohash:'',//city页面传递过来的地址geohash
         msiteTitle:"请选择地址......",
         foodTypes:[],//食品分类列表
-        imgBaseUrl:imgBaseUrl
+        imgBaseUrl:'https://fuss10.elemecdn.com'
      }
    },
    components: {
      headTop
+   },
+   beforeMount(){
+      this.geohash = this.$route.query.geohash;
+      console.log( this.$route);
+      console.log( this.$route.query.geohash)
+   },
+   mounted(){
+        this.getFootTypes();
+   },
+   created(){
+       
+   },
+   methods:{
+       //获取商品分类    
+       async getFootTypes(){
+            var _this = this;
+            var res = await msiteFoodTypes(_this.geohash);
+
+            let resLength = res.length;
+            let resArr = [...res];
+
+            let foodArr = [] ;
+            
+            for(let i=0,j=0;i<resLength;i+=8,j++){
+                foodArr[j] = resArr.splice(0,8);
+                console.log("执行");
+            }
+            this.foodTypes = foodArr;
+
+            setTimeout(function(){
+                    new Swiper('.swiper-container',{
+                        pagination:'.swiper-pagination',
+                        // loop:true
+                    });
+            },10)
+          
+           
+       }
    }
  }
 </script>
