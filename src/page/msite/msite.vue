@@ -34,9 +34,9 @@
           <svg class="shop_icon">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#shop"></use>
           </svg>
-          <span>附近商家</span>
+          <span class="shop_header_title">附近商家</span>
         </header>
-        <shopList v-if="0" :geohash="geohash"></shopList>
+        <shopList v-if="1" :geohash="geohash"></shopList>
 
       </div>
 
@@ -107,7 +107,7 @@
 
 
 <style lang="scss" scoped>
-    @import 'src/style/mixin';
+  @import '../../style/mixin';
 	.link_search{
 		left: .8rem;
 		@include wh(.9rem, .9rem);
