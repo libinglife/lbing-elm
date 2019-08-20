@@ -54,7 +54,7 @@
     data () {
       return {
         geohash:'',//city页面传递过来的地址geohash
-        msiteTitle:"请选择地址......",
+        msiteTitle:"请选择地址哦......",
         foodTypes:[],//食品分类列表
         imgBaseUrl:'https://fuss10.elemecdn.com',
         // hasGetData:'',
