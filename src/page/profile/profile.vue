@@ -46,7 +46,7 @@
                 </ul>
             </section>
 
-            <section class="profile-1reTe"> 
+            <section class="profile-1reTe">
                  <!-- 我的订单 -->
                 <router-link to='/order' class="myorder">
                     <aside>
@@ -132,17 +132,18 @@
                 </router-link>
             </section>
         </section>
-
+        <footGuide></footGuide>
         <!-- <transition name="router-slid" node ="out-in"> -->
         <transition name="router-slid" >
-           <router-view></router-view>        
+           <router-view></router-view>
         </transition>
-        
+
     </div>
 </template>
 
 <script>
 import headTop from "../../components/header/head";
+import footGuide from '../../components/footer/footGuide';
 import { imgBaseUrl } from "../../config/env";
 import { mapState, mapMutations } from "vuex";
 export default {
@@ -161,7 +162,8 @@ export default {
     };
   },
   components: {
-    headTop
+    headTop,
+    footGuide
   },
   mounted() {
     this.initData();
@@ -171,7 +173,7 @@ export default {
   },
   methods: {
     initData() {
-       
+
       if (this.userInfo && this.userInfo.user_id) {
         this.avatar = this.userInfo.avatar;
         this.username = this.userInfo.username;
@@ -194,7 +196,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "src/style/mixin";
+@import "../../style/mixin";
 
 .profile_page {
   p,

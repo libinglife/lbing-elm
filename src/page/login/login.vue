@@ -59,9 +59,6 @@
   import {mapState , mapMutations} from 'vuex';
   import { getcaptchas , accountLogin} from "../../service/getData";
 
-
-
-
 export default {
   name: "login",
   components:{

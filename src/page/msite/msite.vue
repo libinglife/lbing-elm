@@ -11,6 +11,7 @@
 				<span class="title_text ellipsis">{{msiteTitle}}</span>
 			</router-link>
       </head-top>
+
       <nav class="msite_nav">
     		<div class="swiper-container" v-if="foodTypes.length">
 		        <div class="swiper-wrapper">
@@ -23,22 +24,30 @@
 	            		</router-link>
 		            </div>
 		        </div>
-		        <div class="swiper-pagination"></div>
+		        <div class="swiper-pagination" ></div>
 		    </div>
-		    <img src="../../images/fl.svg" class="fl_back animation_opactiy" v-else>
+		    <img  src="../../images/fl.svg" v-else class="fl_back animation_opactiy" >
     	</nav>
+
+      <div class="shop_list_container">
+        <header class="shop_header">
+          <svg class="shop_icon">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#shop"></use>
+          </svg>
+          <span>附近商家</span>
+        </header>
+        <shopList v-if="0" :geohash="geohash"></shopList>
+
+      </div>
 
     </div>
 </template>
 
 <script>
  import headTop from "../../components/header/head";
-
- import {msiteFoodTypes} from '@/service/getData.js';
-//  import '../../style/swiper.min.js'
-//  import '../../style/swiper.min.css';
-
-
+ import shopList from '../../components/common/shoplist'
+ // import {msiteFoodTypes} from '@/service/getData.js';
+ import {msiteFoodTypes} from 'src/service/getData';
 
  export default {
     name:'msite',
@@ -47,11 +56,13 @@
         geohash:'',//city页面传递过来的地址geohash
         msiteTitle:"请选择地址......",
         foodTypes:[],//食品分类列表
-        imgBaseUrl:'https://fuss10.elemecdn.com'
+        imgBaseUrl:'https://fuss10.elemecdn.com',
+        // hasGetData:'',
      }
    },
    components: {
-     headTop
+     headTop,
+     shopList
    },
    beforeMount(){
       this.geohash = this.$route.query.geohash;
@@ -62,10 +73,10 @@
         this.getFootTypes();
    },
    created(){
-       
+
    },
    methods:{
-       //获取商品分类    
+       //获取商品分类
        async getFootTypes(){
             var _this = this;
             var res = await msiteFoodTypes(_this.geohash);
@@ -74,7 +85,7 @@
             let resArr = [...res];
 
             let foodArr = [] ;
-            
+
             for(let i=0,j=0;i<resLength;i+=8,j++){
                 foodArr[j] = resArr.splice(0,8);
                 console.log("执行");
@@ -87,8 +98,8 @@
                         // loop:true
                     });
             },10)
-          
-           
+
+
        }
    }
  }
