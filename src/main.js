@@ -5,6 +5,8 @@ import App from './App'
 import router from './router'
 import store from './store'
 
+import $ from 'jquery'
+
 // 适配rem
 import './config/rem';
 

@@ -13,6 +13,9 @@ const msite = resolve => require.ensure([], () => resolve(require('@/page/msite/
 const login = resolve => require.ensure([], () => resolve(require('@/page/login/login')), 'login');
 const profile = resolve => require.ensure([], () => resolve(require('@/page/profile/profile')), 'profile');
 const info = resolve => require.ensure([], () => resolve(require('@/page/profile/children/info')), 'info');
+const order = resolve => require.ensure([],( )=> resolve(require('@/page/order/order')),'order');
+const search = resolve => require.ensure([],( )=> resolve(require('@/page/search/search')),'search');
+const food = resolve => require.ensure([],( )=> resolve(require('@/page/food/food')),'food');
 
 export default new Router({
     routes: [{
@@ -46,5 +49,17 @@ export default new Router({
             path: 'info',
             component: info,
         }]
+    },{
+        path:'/order',
+        name:order,
+        component:order
+    },{
+        path:'/search/:geohash',
+        name:search,
+        component:search
+    },{
+        path:'/food',
+        name:food,
+        component:food
     }]
 })

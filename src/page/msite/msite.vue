@@ -30,24 +30,26 @@
     	</nav>
 
       <div class="shop_list_container">
-        <header class="shop_header">
-          <svg class="shop_icon">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#shop"></use>
-          </svg>
-          <span class="shop_header_title">附近商家</span>
-        </header>
-        <shopList v-if="1" :geohash="geohash"></shopList>
+            <header class="shop_header">
+              <svg class="shop_icon">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#shop"></use>
+              </svg>
+              <span class="shop_header_title">附近商家</span>
+            </header>
+            <shopList v-if="hasGetData" :geohash="geohash"></shopList>
+            <footGuide></footGuide>
 
       </div>
-
     </div>
 </template>
 
 <script>
  import headTop from "../../components/header/head";
  import shopList from '../../components/common/shoplist'
+ import footGuide from '../../components/footer/footGuide'
  // import {msiteFoodTypes} from '@/service/getData.js';
- import {msiteFoodTypes} from 'src/service/getData';
+ import {msiteAddress,msiteFoodTypes ,cityGuess} from 'src/service/getData';
+ import {mapMutations} from 'vuex';
 
  export default {
     name:'msite',
@@ -57,17 +59,34 @@
         msiteTitle:"请选择地址哦......",
         foodTypes:[],//食品分类列表
         imgBaseUrl:'https://fuss10.elemecdn.com',
-        // hasGetData:'',
+        hasGetData:false,//是否已经获取地理位置数据，成功之后再获取商铺列表信息
      }
    },
    components: {
-     headTop,
-     shopList
+       headTop,
+       shopList,
+       footGuide
    },
-   beforeMount(){
-      this.geohash = this.$route.query.geohash;
-      console.log( this.$route);
-      console.log( this.$route.query.geohash)
+   async beforeMount(){
+        if(!this.$route.query.geohash){
+            const address = await cityGuess();
+            console.log(address)
+            this.geohash = address.latitude+','+ address.longitude
+        }else {
+            this.geohash = this.$route.query.geohash;
+        }
+
+        //保存geohash 到vuex
+        this.SAVE_GEOHASH(this.geohash);
+
+        //获取位置信息
+        let res =  await msiteAddress(this.geohash);
+        this.msiteTitle = res.name;
+
+        //记录当前经度纬度
+        this.RECORD_ADDRESS(res);
+        this.hasGetData = true ;
+
    },
    mounted(){
         this.getFootTypes();
@@ -76,6 +95,10 @@
 
    },
    methods:{
+       ...mapMutations([
+           'SAVE_GEOHASH',
+           'RECORD_ADDRESS'
+       ]),
        //获取商品分类
        async getFootTypes(){
             var _this = this;
@@ -83,23 +106,17 @@
 
             let resLength = res.length;
             let resArr = [...res];
-
             let foodArr = [] ;
-
             for(let i=0,j=0;i<resLength;i+=8,j++){
                 foodArr[j] = resArr.splice(0,8);
-                console.log("执行");
             }
             this.foodTypes = foodArr;
-
             setTimeout(function(){
                     new Swiper('.swiper-container',{
                         pagination:'.swiper-pagination',
                         // loop:true
                     });
             },10)
-
-
        }
    }
  }

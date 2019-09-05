@@ -5,6 +5,8 @@ export const cityGuess = () => fetch('/api/v1/cities', {
     type: 'guess'
 })
 
+//获取msite页面地址信息
+export const msiteAddress = (geohash)=>fetch("/api/v2/pois/"+geohash);
 //首页热门城市
 export const hotcity = () => fetch('/api/v1/cities', {
     type: 'hot'
@@ -57,19 +59,20 @@ export const shopList = (latitude , longitude ,offset ,restaurant_category_id = 
     if(item.status){
       supportStr+='&support_ids[]='+item.id;
     }
-    let data ={
-      latitude,
-      longitude,
-      offset,
-      limit:'20',
-      'extras[]':'activities',
-      keyword:'',
-      restaurant_category_id,
-      'restaurant_category_ids[]':restaurant_category_ids,
-      order_by,
-      'delivery_mode[]':delivery_mode+supportStr
-    };
-    return fetch('/shopping/restaurants',data)
-  })
+  });
+  let data ={
+    latitude,
+    longitude,
+    offset,
+    limit:'20',
+    'extras[]':'activities',
+    keyword:'',
+    restaurant_category_id,
+    'restaurant_category_ids[]':restaurant_category_ids,
+    order_by,
+    'delivery_mode[]':delivery_mode+supportStr
+  };
+
+  return fetch('/api/shopping/restaurants',data)
 
 }
